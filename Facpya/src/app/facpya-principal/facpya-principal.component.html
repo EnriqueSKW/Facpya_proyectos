@@ -1,7 +1,20 @@
-<div class="col-md-12">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top" style="font-size: x-large;">
+  <!-- Links -->
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" href="#" (click)="TablaPromedio = true">Tabla costo promedio</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#" (click)="TablaPromedio = false">Tabla Peps</a>
+    </li>
 
+  </ul>
+</nav>
 
-    <table class="table table-bordered border-primary overflow-auto table-sm" border="1" width="50%">
+<div style="margin-left: 20px; margin-top: 100px;" class="container">
+
+  <div class="col-md-12">
+    <table class="table table-bordered border-dark overflow-auto table-sm" border="1" width="50%">
       <tr>
         <td colspan="7">
           Empresa: <input type="text" size="83" name="txtEmpresa">
@@ -22,9 +35,9 @@
         <td colspan="4">
           Unidad: <input type="text" size="39" name="txtUnidad">
       </tr>
-       <tr>
+      <tr>
         <td colspan="2">
-          Limites revisados en: <input type="text"  name="txtLimitesRev">
+          Limites revisados en: <input type="text" name="txtLimitesRev">
         <td colspan="2">
           Fecha: <input type="date" name="txtFechaI">
         <td colspan="2">
@@ -41,63 +54,126 @@
     </table>
     <br>
     <br>
-    <table  style="width: 20%;" class="table table-bordered border-primary overflow-auto table-responsive-xxl">
-      <thead style="text-align: center;">
-        <tr>
-          <th rowspan="2" scope="col">Fecha</th>
-          <th rowspan="2" scope="col"># Factura</th>
-          <th rowspan="2" scope="col">Concepto</th>
-          <th scope="col" colspan="3">Unidades</th>
-          <th scope="col" colspan="2" >Costos</th>
-          <th scope="col" colspan="3">Valores</th>
-        </tr>
-        <tr>
-         
-          <th  align="center">Entrada</th>
-          <th  align="center">Salida</th>
-          <th align="center">Existencia</th>
-          <th  align="center">Unitario</th>
-          <th  align="center">Medio</th>
-          <th align="center">Debe</th>
-          <th  align="center">Haber</th>
-          <th align="center">Saldo</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let in of counter(lista) ;let i = index" id="container1">
-          <td align="center"><input type="date" width="200" id="Fecha{{i}}"></td>
-          <td  align="center"><input type="text" name="Factura" id="Factura{{i}}"></td>
-          <td  align="center"><input type="text" name="Concepto" id="Concepto{{i}}"></td>
-          <td  align="center"><input type="text" name="Entrada" id="Entrada{{i}}"></td>
-          <td  align="center"><input type="text" name="Salida" id="Salida{{i}}"></td>
-          <td align="center"><input type="text" name="Existencia" (keyup)="CalcularDebe(i)" id="Existencia{{i}}"></td>
-          <td  align="center"><input type="text" name="Unitario" (keyup)="CalcularDebe(i)"  id="Unitario{{i}}"></td>
-          <td  align="center"><input type="text" name="Medio" id="Medio{{i}}"></td>
-          <td  align="center"><input type="text" name="Debe" id="Debe{{i}}"></td>
-          <td  align="center"><input type="text" name="Haber" id="Haber{{i}}"></td>
-          <td  align="center"><input type="text" name="Saldo" id="Saldo{{i}}"></td>
-        </tr>
-      </tbody>
-    </table>
+
+    <div *ngIf="TablaPromedio == true">
+      <table style="width: 20%;" class="table table-bordered border-dark overflow-auto table-responsive-xxl">
+        <thead style="text-align: center;">
+          <tr>
+            <th rowspan="2" scope="col">Fecha</th>
+            <th rowspan="2" scope="col"># Factura</th>
+            <th rowspan="2" scope="col">Concepto</th>
+            <th scope="col" colspan="3">Unidades</th>
+            <th scope="col" colspan="2">Costos</th>
+            <th scope="col" colspan="3">Valores</th>
+          </tr>
+          <tr>
+
+            <th align="center">Entrada</th>
+            <th align="center">Salida</th>
+            <th align="center">Existencia</th>
+            <th align="center">Unitario</th>
+            <th align="center">Medio</th>
+            <th align="center">Debe</th>
+            <th align="center">Haber</th>
+            <th align="center">Saldo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let in of counter(lista) ;let i = index" id="container1">
+            <td align="center"><input type="date" width="200" id="Fecha{{i}}"></td>
+            <td align="center"><input type="text" name="Factura" id="Factura{{i}}"></td>
+            <td align="center"><input type="text" name="Concepto" id="Concepto{{i}}"></td>
+            <td align="center"><input type="text" name="Entrada" (keyup)="HabilitarHabilitarEntrada(i)"
+                id="Entrada{{i}}"></td>
+            <td align="center"><input type="text" name="Salida" (keyup)="HabilitarHabilitarSalida(i)" id="Salida{{i}}">
+            </td>
+            <td align="center"><input type="text" name="Existencia" (keyup)="CalcularDebe(i)" id="Existencia{{i}}"></td>
+            <td align="center"><input type="text" name="Unitario" (keyup)="CalcularDebe(i)" id="Unitario{{i}}"></td>
+            <td align="center"><input type="text" name="Medio" id="Medio{{i}}"></td>
+            <td align="center"><input type="text" name="Debe" id="Debe{{i}}"></td>
+            <td align="center"><input type="text" name="Haber" id="Haber{{i}}"></td>
+            <td align="center"><input type="text" name="Saldo" id="Saldo{{i}}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="TablaPromedio == false">
+      <table style="width: 20%;" class="table table-bordered border-dark overflow-auto table-responsive-xxl">
+        <thead style="text-align: center;">
+          <tr>
+            <th rowspan="2" scope="col">Fecha</th>
+            <th rowspan="2" scope="col"># Factura</th>
+            <th rowspan="2" scope="col">Concepto</th>
+            <th scope="col" colspan="3">Unidades</th>
+            <th scope="col" colspan="2">Costos</th>
+            <th scope="col" colspan="3">Valores</th>
+          </tr>
+          <tr>
+
+            <th align="center">Entrada</th>
+            <th align="center">Salida</th>
+            <th align="center">Existencia</th>
+            <th align="center">Unitario</th>
+            <th align="center">Medio</th>
+            <th align="center">Debe</th>
+            <th align="center">Haber</th>
+            <th align="center">Saldo</th>
+            <th colspan="2" align="center">Extra Libro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let in of counter(lista) ;let i = index" id="container1">
+            <td align="center"><input type="date" width="200" id="Fecha{{i}}"></td>
+            <td align="center"><input type="text" name="Factura" id="Factura{{i}}"></td>
+            <td align="center"><input type="text" name="Concepto" id="Concepto{{i}}"></td>
+            <td align="center"><input type="text" name="Entrada" id="Entrada{{i}}"></td>
+            <td align="center"><input type="text" name="Salida" id="Salida{{i}}"></td>
+            <td align="center"><input type="text" name="Existencia" id="Existencia{{i}}"></td>
+            <td align="center"><input type="text" name="Unitario" id="Unitario{{i}}"></td>
+            <td align="center"><input type="text" name="Medio" id="Medio{{i}}"></td>
+            <td align="center"><input type="text" name="Debe" id="Debe{{i}}"></td>
+            <td align="center"><input type="text" name="Haber" id="Haber{{i}}"></td>
+            <td align="center"><input type="text" name="Saldo" id="Saldo{{i}}"></td>
+            <td align="center"><input type="text" name="Extra1" id="Extra1{{i}}"></td>
+            <td align="center"><input type="text" name="Extra2" id="Extra2{{i}}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+
     <br>
-    <div  id="plus" style="margin: auto; padding-left: 50%;">
-      <a style="cursor:pointer" id="filldetails" (click)="lista = lista + 1"><img src="https://img.icons8.com/officel/80/000000/plus.png"/><br>Agregar campos</a>
+    <div id="plus" style="margin: auto; padding-left: 50%;">
+      <a style="cursor:pointer" id="filldetails" (click)="lista = lista + 1"><img
+          src="https://img.icons8.com/officel/80/000000/plus.png" /><br>Agregar campos</a>
     </div>
     <table border="2" style="margin-left: 10px;">
       <tr id="containerFinal">
-        <td width="50%" align="center" rowspan="1" colspan="4"><h2>Comprobación</h2></td>
+        <td width="50%" align="center" rowspan="1" colspan="4">
+          <h2>Comprobación</h2>
+        </td>
       </tr>
       <tr id="containerFinal">
-        <td width="50%" align="center" rowspan="1" colspan="4"><h2>UDS EXISTENCIA X COSTO MEDIO</h2></td>
+        <td width="50%" align="center" rowspan="1" colspan="4">
+          <h2>UDS EXISTENCIA X COSTO MEDIO</h2>
+        </td>
       </tr>
       <tr id="containerFinal">
-        
-        <td width="50%" align="center" rowspan="1" colspan="4"><input type="text" name="celda1"></td>
-        
+
+        <td width="10%" align="center"><input placeholder="UDS EXISTENCIA" type="text" (keyup)="calcularComprobacion()"
+            id="udsexistenciacbp"></td>
+        <td width="10%" align="center"><input placeholder="COSTOMEDIO" type="text" (keyup)="calcularComprobacion()"
+            id="costomediocbp"></td>
+
+      </tr>
+      <tr>
+        <td width="50%" colspan="2" align="center"><input placeholder="" readonly id="resultadocbp" readonly
+            type="text"></td>
       </tr>
     </table>
 
-  
 
 
   </div>
+</div>

@@ -38,6 +38,7 @@ export class FacpyaPrincipalComponent implements OnInit {
     
     if( (<HTMLInputElement>document.getElementById("Debe"+id)).disabled == true)
     {
+      //se hacen los calculos cuando es una salida
       var resultado:number = Existencias * PrecioUnitario;
       resultado = Math.trunc(resultado);
       (<HTMLInputElement>document.getElementById("Debe"+id)).value =  resultado.toString();
@@ -65,7 +66,7 @@ export class FacpyaPrincipalComponent implements OnInit {
     this.SumaSaldo = 0;
     let sumatotal:number = 0;
     let i:number = 0;
-    console.log(id);
+   
     this.SumaSaldo = this.SumaSaldo + NuevaSuma;
     if (id == 0)
     {
@@ -74,10 +75,10 @@ export class FacpyaPrincipalComponent implements OnInit {
     else
     {
       var identificador = id-1
-      console.log(identificador);
+     
       var saldoAnterior = (<HTMLInputElement>document.getElementById("Saldo"+identificador)).value;
-      this.SumaSaldo = this.SumaSaldo + parseInt(saldoAnterior);
-      console.log(this.SumaSaldo);
+      this.SumaSaldo = this.SumaSaldo + parseFloat(saldoAnterior);
+   
       (<HTMLInputElement>document.getElementById("Saldo"+id)).value = this.SumaSaldo.toString();
     }
  
@@ -87,11 +88,11 @@ export class FacpyaPrincipalComponent implements OnInit {
   setSaldoSalida(id:any)
   {
    var Salida =  (<HTMLInputElement>document.getElementById("Salida"+id)).value;
-   console.log("salida =" + Salida);
+
    var CostoMedioUnitario =  (<HTMLInputElement>document.getElementById("Unitario"+id)).value;
-   console.log("CostoMedioUnitario =" + CostoMedioUnitario);
+
     var CostoSalida =  parseFloat(CostoMedioUnitario) * parseFloat(Salida);
-    console.log("CostoSalida =" + CostoSalida);
+
    var saldoAnterior = parseInt((<HTMLInputElement>document.getElementById("Saldo"+(id-1))).value);
    (<HTMLInputElement>document.getElementById("Haber"+id)).value = CostoSalida.toString();
    (<HTMLInputElement>document.getElementById("Saldo"+id)).value = (saldoAnterior - CostoSalida).toString();
@@ -111,13 +112,13 @@ export class FacpyaPrincipalComponent implements OnInit {
     var Entrada = (<HTMLInputElement>document.getElementById("Entrada"+id)).value;
     if (Entrada != null || Entrada != undefined || Entrada != "")
     {
-      console.log("sentrew");
+     
       (<HTMLInputElement>document.getElementById("Salida"+id)).disabled = true;
       (<HTMLInputElement>document.getElementById("Haber"+id)).disabled = true;
     }
     if(Entrada == "")
     {
-      console.log("entrew");
+    
       (<HTMLInputElement>document.getElementById("Salida"+id)).disabled = false;
       (<HTMLInputElement>document.getElementById("Haber"+id)).disabled = false;
     }

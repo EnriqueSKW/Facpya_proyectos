@@ -13,14 +13,18 @@ export class FacpyaPrincipalComponent implements OnInit {
   public SaldoArrastrado:number = 0;
   public esEntrada:boolean = false;
   public TablaPromedio:boolean = true;
+  public SaldoInicial:number = 0;
+  public ExistenciaInicial:number = 0;
+  public SaldoTotal:number = 0;
   constructor() { }
   @Input() CostoMedioLinea:number = 0;
   public lista: any = 5;
   ngOnInit(): void {
   }
-  counter(i: number) {
+  //el counter aumenta el numero de renglones en cada tabla
+  counter(i: number)  {
     return new Array(i);
-}
+  }
 
   public CalcularDebe(id:any)
   {
@@ -54,25 +58,97 @@ export class FacpyaPrincipalComponent implements OnInit {
  
   }
 
+  setExistencias(Tipo:any,id:any,Dato:any)
+  {
+    if(Dato.value == "")
+    {
+      return //regresa si el valor es igual a nada
+    }
+    if (Tipo == 1) //Es una entrada
+    {
+      Dato.value //obtenemos el valor de entrada, cuantas entradas son
+      if(id == 0) // verificamos si es la primer entrada
+      {
+        var resultado:number = parseInt(Dato.value) + parseInt(this.ExistenciaInicial.toString());
+       (<HTMLInputElement>document.getElementById("Existencia"+id)).value = resultado.toString();
+       if(Dato.value == "")
+       {
+         return;
+       } 
+       else
+       {
+           this.CalcularDebe(id)
+       }
+     
+      }
+      else
+      {
+        var EntradaAnterior = (<HTMLInputElement>document.getElementById("Existencia"+(id-1))).value;
+        var resultado = parseFloat(EntradaAnterior) + parseFloat(Dato.value);
+        (<HTMLInputElement>document.getElementById("Existencia"+id)).value = resultado.toString(); 
+        if(Dato.value == "")
+        {
+          return;
+        } 
+        else
+        {
+            this.CalcularDebe(id)
+        }
+      }
+    
+
+    }
+    else //Es una Salida
+    {
+      Dato.value //obtenemos el valor de salida, cuantas salidas son
+        var EntradaAnterior = (<HTMLInputElement>document.getElementById("Existencia"+(id-1))).value;
+        var resultado = parseFloat(EntradaAnterior) - parseFloat(Dato.value);
+        (<HTMLInputElement>document.getElementById("Existencia"+id)).value = resultado.toString(); 
+        if(Dato.value == "")
+        {
+          return;
+        } 
+        else
+        {
+            this.CalcularDebe(id)
+        }
+    }
+  }
+
+  setExistenciasIniciales(id:any,Entrada?:any)
+  {  
+   this.ExistenciaInicial = Entrada.value;
+  (<HTMLInputElement>document.getElementById("Existencia"+id)).value = Entrada.value; 
+  }
+
+  setSaldosIniciales(id:any,Entrada?:any)
+  {  
+  
+  (<HTMLInputElement>document.getElementById("Saldo"+id)).value = Entrada.value; 
+  this.SaldoTotal = Entrada.value;
+  }
+
   public setCostoMedio(id:any)
   {
   var existencia =  (<HTMLInputElement>document.getElementById("Existencia"+id)).value; 
   var saldo =  (<HTMLInputElement>document.getElementById("Saldo"+id)).value;
-  (<HTMLInputElement>document.getElementById("Medio"+id)).value = (parseInt(saldo) / parseInt(existencia) ).toString();
+  var resultado = parseFloat(saldo) / parseFloat(existencia); 
+
+  (<HTMLInputElement>document.getElementById("Medio"+id)).value = (resultado.toFixed(2)).toString();
   }
 
   public setSaldo(id:any,NuevaSuma:any)
   {
     this.SumaSaldo = 0;
-    let sumatotal:number = 0;
-    let i:number = 0;
-   
+    this.SaldoTotal = parseFloat((<HTMLInputElement>document.getElementById("Saldoinicial")).value);
     this.SumaSaldo = this.SumaSaldo + NuevaSuma;
-    if (id == 0)
+    if (id == 0)//si es el primer renglon de la tabla
     {
-    (<HTMLInputElement>document.getElementById("Saldo"+id)).value = this.SumaSaldo.toString();
+      var resultado:number = parseFloat( this.SumaSaldo.toString()) + parseFloat(this.SaldoTotal.toString());
+    (<HTMLInputElement>document.getElementById("Saldo"+id)).value = resultado.toString();
+      this.SaldoTotal = resultado;
     }
-    else
+    else //si es cualquier otro renglon de la tabla
     {
       var identificador = id-1
      
@@ -80,6 +156,7 @@ export class FacpyaPrincipalComponent implements OnInit {
       this.SumaSaldo = this.SumaSaldo + parseFloat(saldoAnterior);
    
       (<HTMLInputElement>document.getElementById("Saldo"+id)).value = this.SumaSaldo.toString();
+      this.SaldoTotal = this.SumaSaldo;
     }
  
     this.setCostoMedio(id);
@@ -96,16 +173,10 @@ export class FacpyaPrincipalComponent implements OnInit {
    var saldoAnterior = parseInt((<HTMLInputElement>document.getElementById("Saldo"+(id-1))).value);
    (<HTMLInputElement>document.getElementById("Haber"+id)).value = CostoSalida.toString();
    (<HTMLInputElement>document.getElementById("Saldo"+id)).value = (saldoAnterior - CostoSalida).toString();
+   this.SaldoTotal = saldoAnterior - CostoSalida;
   }
 
-  addFieldValue() {
-    this.fieldArray.push(this.newAttribute)
-    this.newAttribute = {};
-  }
 
-  deleteFieldValue(index:any) {
-      this.fieldArray.splice(index, 1);
-  }
 
   HabilitarHabilitarEntrada(id:any)
   {
@@ -125,19 +196,38 @@ export class FacpyaPrincipalComponent implements OnInit {
   }
   HabilitarHabilitarSalida(id:any)
   {
-    var salida = (<HTMLInputElement>document.getElementById("Salida"+id)).value;
-    if (salida != null || salida != undefined || salida != ""  )
-    {
-      (<HTMLInputElement>document.getElementById("Entrada"+id)).disabled = true;
-      (<HTMLInputElement>document.getElementById("Debe"+id)).disabled = true;
-      (<HTMLInputElement>document.getElementById("Unitario"+id)).value =  (<HTMLInputElement>document.getElementById("Medio"+(id-1))).value ;
-
-    }
+    var salida = (<HTMLInputElement>document.getElementById("Salida"+id)).value; 
     if(salida == "")
     {
+
       (<HTMLInputElement>document.getElementById("Entrada"+id)).disabled = false;
       (<HTMLInputElement>document.getElementById("Debe"+id)).disabled = false;
     }
+    else if (salida != null || salida != undefined || salida != ""  || salida != " "  )
+    {
+      (<HTMLInputElement>document.getElementById("Entrada"+id)).disabled = true;
+      (<HTMLInputElement>document.getElementById("Debe"+id)).disabled = true;
+      try { //trata de conseguir los registros previos si es que existen
+        if((<HTMLInputElement>document.getElementById("Medio"+(id-1))).value == "" || (<HTMLInputElement>document.getElementById("Medio"+(id-1))).value == undefined ||(<HTMLInputElement>document.getElementById("Medio"+(id-1))).value == null)
+        {
+          (<HTMLInputElement>document.getElementById("Unitario"+id)).value =  (<HTMLInputElement>document.getElementById("Unitario"+(id-1))).value ;
+
+        }
+        else
+        {
+                  (<HTMLInputElement>document.getElementById("Unitario"+id)).value =  (<HTMLInputElement>document.getElementById("Medio"+(id-1))).value ;
+
+        }
+      
+      } catch (error) {
+         console.log("no hay registros previos de Medio");
+       
+      
+      }
+
+
+    }
+   
   }
 
   calcularComprobacion()
